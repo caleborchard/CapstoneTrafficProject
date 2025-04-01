@@ -1,5 +1,5 @@
 public class loopingQueue<T> extends Queue {
-    public T dequeue() {
+    public T dequeue() { //TODO: Find optimal order to insert items back
         if (head == null) { return null; }
 
         QueueRecord returnrecord = head;

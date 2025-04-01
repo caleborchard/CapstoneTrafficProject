@@ -7,6 +7,7 @@ public class Job {
     public double getTimeOfCreation() { return timeOfCreation; }
     public double getServiceEndTime() { return serviceEndTime; }
     public String getOnboardingStation() { return onboardingStation; }
+    //TODO: Departing station
 
     public Job(double currentTime, String onboardingStation) { timeOfCreation = currentTime; this.onboardingStation = onboardingStation;}
 

@@ -3,14 +3,16 @@ import java.util.List; //I'm just using the default Java list even though it isn
 
 public class Station {
     private String name;
-    private double distanceFromOriginStation;
+    private double distanceFromOriginStation; //In kilometers
     private int population;
     private int numWorkers;
     private VehicleInfo busInfo;
+    public Queue<Job> stationWaiters;
 
     public String getName() { return name; }
     public int getPopulation() { return population; }
     public int getNumWorkers() { return numWorkers; }
+    public double getDistanceFromOriginStation() { return distanceFromOriginStation; }
 
     private double lastPickupTime;
 
@@ -21,29 +23,33 @@ public class Station {
         distanceFromOriginStation = originDistance;
         population = pop;
         busInfo = busInfoIn;
+        stationWaiters = new Queue<Job>();
 
         lastPickupTime = 0;
     }
 
-    public Job[] getBusArrivals(double currentTime) {
+    public void getBusArrivals(double currentTime) {
         List<Job> busArrivals = new ArrayList<>();
         double busTime = getLastPickupTime();
 
         while (busTime < currentTime) {
             for (int i = 0; i < busInfo.getVehicleCapacity(); i++) {
-                busArrivals.add(new Job(busTime, getName()));
+                busArrivals.add(new Job(busTime, getName())); //TODO: Departing station
             }
             busTime += busInfo.getArrivalFrequency(); // Move update after adding jobs
         }
 
-        return busArrivals.toArray(new Job[0]); // Convert to array
+        for(Job j : busArrivals) {
+            stationWaiters.enqueue(j);
+        }
     }
 
     public static UnitTestResult UnitTest() {
         UnitTestResult result = new UnitTestResult();
 
-        Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5));
-        result.recordNewTask(station1.getBusArrivals(10).length == 20);
+        Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5, 50));
+        station1.getBusArrivals(10);
+        result.recordNewTask(station1.stationWaiters.length == 20);
 
         return result;
     }

@@ -19,5 +19,6 @@ public class UnitTest {
         totaltests.factorResults(Queue.UnitTest());
         totaltests.factorResults(Station.UnitTest());
         totaltests.factorResults(loopingQueue.UnitTest());
+        totaltests.factorResults(BatchServerQueue.UnitTest());
     }
 }
