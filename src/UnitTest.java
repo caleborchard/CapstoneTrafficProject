@@ -16,5 +16,7 @@ public class UnitTest {
     private static void doTests() {
         //PUT ALL UNIT TESTS HERE. Run this to perform Unit Tests. Below is example structure for adding Unit Tests of a class.
         //totalTests.factorResults(ExampleClass.UnitTest());
+        totaltests.factorResults(Queue.UnitTest());
+        totaltests.factorResults(Station.UnitTest());
     }
 }
