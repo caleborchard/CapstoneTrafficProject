@@ -1,4 +1,4 @@
-public class loopingQueue<T> extends Queue {
+public class LoopingQueue<T> extends Queue {
     public T dequeue() { //TODO: Find optimal order to insert items back
         if (head == null) { return null; }
 
@@ -16,7 +16,7 @@ public class loopingQueue<T> extends Queue {
     public static UnitTestResult UnitTest() {
         UnitTestResult result = new UnitTestResult();
 
-        loopingQueue<Job> lq1 = new loopingQueue<Job>();
+        LoopingQueue<Job> lq1 = new LoopingQueue<Job>();
         lq1.enqueue(new Job(0, "frederick"));
         lq1.enqueue(new Job(0, "westminster"));
         lq1.enqueue(new Job(0, "dc"));

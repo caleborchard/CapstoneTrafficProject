@@ -1,11 +1,11 @@
 public class BatchServerQueue {
-    private loopingQueue<Station> stationQueue;
+    private LoopingQueue<Station> stationQueue;
     private Queue<Job> currentPassengers;
     private Station currentStation;
     private double nextStopTime;
     private VehicleInfo trainInfo;
 
-    public BatchServerQueue(VehicleInfo vehicleInfo, loopingQueue<Station> stationQueue) {
+    public BatchServerQueue(VehicleInfo vehicleInfo, LoopingQueue<Station> stationQueue) {
         this.stationQueue = stationQueue;
         currentPassengers = new Queue<Job>();
         trainInfo = vehicleInfo;
@@ -36,7 +36,7 @@ public class BatchServerQueue {
         UnitTestResult result = new UnitTestResult();
 
         double currentTime = 0.0;
-        loopingQueue<Station> globalStationQueue = new loopingQueue<Station>();
+        LoopingQueue<Station> globalStationQueue = new LoopingQueue<Station>();
         for(int i = 0; i < 10; i++) {
             globalStationQueue.enqueue(new Station("stationNum" + i, i*30, 1000000, 500000, new VehicleInfo(30, 15, 50)));
         }
