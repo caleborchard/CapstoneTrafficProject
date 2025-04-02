@@ -23,6 +23,9 @@ public class UnitTestResult {
         testsrun++;
         if(success) {
             testsfinished++;
+        } else {
+            System.out.println("Test number " + getTestsRun() + " has failed.");
+            //TODO: Finish printout of failed test. Maybe buffer printing until end results
         }
     }
 }
