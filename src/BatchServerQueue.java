@@ -18,8 +18,7 @@ public class BatchServerQueue {
     public void stopAtStation(double currentTime) {
         currentStation = stationQueue.dequeue();
 
-        double travelTime = currentStation.getDistanceFromOriginStation() / trainInfo.getVehicleSpeed(); //TODO: Fix travelTime logic
-        currentTime += travelTime;
+        currentTime += (currentStation.getDistanceFromOriginStation() / trainInfo.getVehicleSpeed())*60;
 
         currentStation.getBusArrivals(currentTime);
         Job deq = currentStation.stationWaiters.dequeue();
@@ -38,10 +37,11 @@ public class BatchServerQueue {
         double currentTime = 0.0;
         LoopingQueue<Station> globalStationQueue = new LoopingQueue<Station>();
         for(int i = 0; i < 10; i++) {
-            globalStationQueue.enqueue(new Station("stationNum" + i, i*30, 1000000, 500000, new VehicleInfo(30, 15, 50)));
+            globalStationQueue.enqueue(new Station("stationNum" + i, i*50, 1000000, 500000, new VehicleInfo(30, 15, 50)));
         }
 
         BatchServerQueue train1 = new BatchServerQueue(new VehicleInfo(100, 30, 250), globalStationQueue);
+        /*
         train1.stopAtStation(currentTime);
         result.recordNewTask(train1.currentStation.getName().equals("stationNum0"));
         result.recordNewTask(!(train1.currentStation.getName().equals("stationNum1")));
@@ -51,7 +51,11 @@ public class BatchServerQueue {
         train1.stopAtStation(currentTime);
         result.recordNewTask(train1.currentStation.getName().equals("stationNum4"));
         result.recordNewTask(train1.currentStation.stationWaiters.getLength() == 19);
-
+         */
+        for(int i = 0; i < 30; i++) {
+            train1.stopAtStation(currentTime);
+            System.out.println(train1.currentStation.getName());
+        }
         return result;
     }
 }
