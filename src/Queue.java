@@ -36,7 +36,7 @@ public class Queue<T> {
     }
 
     public static UnitTestResult UnitTest() {
-        UnitTestResult result = new UnitTestResult();
+        UnitTestResult result = new UnitTestResult("Queue");
 
         Queue<Integer> queue = new Queue<>();
         result.recordNewTask(queue.isQueueEmpty()); // Test empty queue

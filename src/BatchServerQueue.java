@@ -33,7 +33,7 @@ public class BatchServerQueue {
     }
 
     public static UnitTestResult UnitTest() {
-        UnitTestResult result = new UnitTestResult();
+        UnitTestResult result = new UnitTestResult("BatchServerQueue");
 
         double currentTime = 0.0;
         LoopingQueue<Station> globalStationQueue = new LoopingQueue<Station>();

@@ -12,37 +12,28 @@ public class LoopingQueue<T> extends Queue<T> {
             QueueRecord returnRecord = head;
             head = head.nextrecord;
 
-            if (head == null) {
-                // Only one element remains, no change needed
-                current = returnRecord;
-            } else {
+            if (head == null) current = returnRecord;
+            else {
                 current.nextrecord = returnRecord;
                 current = returnRecord;
                 current.nextrecord = null;
             }
-
             value = returnRecord.value;
         } else {
             // Dequeue from the tail (current) and prepend to the head
             QueueRecord returnRecord = current;
 
-            if (head == current) {
-                // Only one element
-                head = null;
-                current = null;
-            } else {
+            if (head == current) { head = null; current = null; }
+            else {
                 // Find previous of current
                 QueueRecord prev = head;
-                while (prev.nextrecord != current) {
-                    prev = prev.nextrecord;
-                }
+                while (prev.nextrecord != current) { prev = prev.nextrecord; }
                 prev.nextrecord = null;
                 current = prev;
 
                 returnRecord.nextrecord = head;
                 head = returnRecord;
             }
-
             value = returnRecord.value;
         }
 
@@ -52,9 +43,8 @@ public class LoopingQueue<T> extends Queue<T> {
             dequeueCount = 0;
 
             // Move to the next element to avoid repeating the last one
-            if (isForward && head != null) {
-                head = head.nextrecord;
-            } else if (!isForward && current != null) {
+            if (isForward && head != null) { head = head.nextrecord; }
+            else if (!isForward && current != null) {
                 QueueRecord prev = head;
                 if (prev != null) {
                     while (prev.nextrecord != current) {
@@ -64,12 +54,11 @@ public class LoopingQueue<T> extends Queue<T> {
                 }
             }
         }
-
         return value;
     }
 
     public static UnitTestResult UnitTest() {
-        UnitTestResult result = new UnitTestResult();
+        UnitTestResult result = new UnitTestResult("LoopingQueue");
 
         LoopingQueue<Job> lq1 = new LoopingQueue<Job>();
         lq1.enqueue(new Job(0, "frederick"));

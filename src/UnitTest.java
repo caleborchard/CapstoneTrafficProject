@@ -1,5 +1,5 @@
 public class UnitTest {
-    private static UnitTestResult totaltests = new UnitTestResult();
+    private static UnitTestResult totaltests = new UnitTestResult("totalTests");
 
     public static void main(String[] args) {
         System.out.println("Running all unit tests");
@@ -10,6 +10,7 @@ public class UnitTest {
         }
         else {
             System.out.println("FAIL");
+            System.out.println(totaltests.getErrors());
         }
     }
 

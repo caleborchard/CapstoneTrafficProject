@@ -45,7 +45,7 @@ public class Station {
     }
 
     public static UnitTestResult UnitTest() {
-        UnitTestResult result = new UnitTestResult();
+        UnitTestResult result = new UnitTestResult("Station");
 
         Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5, 50));
         station1.getBusArrivals(10);
