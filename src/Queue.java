@@ -21,8 +21,9 @@ public class Queue<T> {
     public void enqueue(T value) {
         QueueRecord newrecord = new QueueRecord(value);
 
-        if(head == null) { head = newrecord; current = newrecord; }
-        else { current.nextrecord = newrecord; current = newrecord; }
+        if(head == null) { head = newrecord; }
+        else { current.nextrecord = newrecord; }
+        current = newrecord;
         length++;
     }
 
