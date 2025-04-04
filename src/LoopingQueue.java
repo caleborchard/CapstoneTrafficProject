@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List; //List only used for Unit Test
 
 public class LoopingQueue<T> extends Queue<T> {
     protected class DoublyQueueRecord extends QueueRecord {
@@ -12,29 +12,35 @@ public class LoopingQueue<T> extends Queue<T> {
         }
     }
 
-    protected DoublyQueueRecord head, current;
+    protected DoublyQueueRecord current;
     private boolean forward = true;
+    private final List<CityInfoHolder> stationInfo = new ArrayList<>();
+    public CityInfoHolder[] getStationNames() { return stationInfo.toArray(new CityInfoHolder[0]); }
 
     public void enqueue(T value) {
-        DoublyQueueRecord newrecord = new DoublyQueueRecord(value);
+        DoublyQueueRecord newRecord = new DoublyQueueRecord(value);
+        if(newRecord.value instanceof Station s) { stationInfo.add(new CityInfoHolder(s.getName(), s.getNumWorkers())); }
 
-        if(head == null) { head = newrecord; }
-        else { current.nextrecord = newrecord; newrecord.prevrecord = current; }
-        current = newrecord;
+        if(current == null) { current = newRecord; }
+        else {
+            DoublyQueueRecord lastValid = current;
+            while(lastValid.nextrecord != null) {
+                lastValid = lastValid.nextrecord;
+            }
+            lastValid.nextrecord = newRecord;
+            newRecord.prevrecord = lastValid;
+        }
         length++;
     }
 
     public T dequeue() {
-        if((head.nextrecord == null && forward) ^ (head.prevrecord == null && !forward)) forward = !forward;
-        DoublyQueueRecord returnRecord = head;
-
-        if(forward) {
-            current = returnRecord.nextrecord;
+        if ((current.nextrecord == null && forward) ^ (current.prevrecord == null && !forward)) forward = !forward;
+        DoublyQueueRecord returnRecord = current;
+        if (forward) {
+            if(current.nextrecord != null) current = current.nextrecord;
         } else {
-            current = returnRecord.prevrecord;
+            if(current.prevrecord != null) current = current.prevrecord;
         }
-        head = current;
-
         return returnRecord.value;
     }
 
@@ -42,28 +48,28 @@ public class LoopingQueue<T> extends Queue<T> {
         UnitTestResult result = new UnitTestResult("LoopingQueue");
 
         LoopingQueue<Job> lq1 = new LoopingQueue<>();
-        lq1.enqueue(new Job(0, "frederick"));
-        lq1.enqueue(new Job(0, "westminster"));
-        lq1.enqueue(new Job(0, "dc"));
-        lq1.enqueue(new Job(0, "frostburg"));
+        lq1.enqueue(new Job(0, "frederick", ""));
+        lq1.enqueue(new Job(0, "westminster", ""));
+        lq1.enqueue(new Job(0, "dc", ""));
+        lq1.enqueue(new Job(0, "frostburg", ""));
 
-        List<Boolean> list = new ArrayList<>();
-        for(int i = 0; i < 4; i++) {
-            list.add(lq1.dequeue().getOnboardingStation().equals("frederick"));
-            list.add(lq1.dequeue().getOnboardingStation().equals("westminster"));
-            list.add(lq1.dequeue().getOnboardingStation().equals("dc"));
-            list.add(lq1.dequeue().getOnboardingStation().equals("frostburg"));
-            list.add(lq1.dequeue().getOnboardingStation().equals("dc"));
-            list.add(lq1.dequeue().getOnboardingStation().equals("westminster"));
+        List<Boolean> boolList = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("frederick"));
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("westminster"));
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("dc"));
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("frostburg"));
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("dc"));
+            boolList.add(lq1.dequeue().getOnboardingStation().equals("westminster"));
         }
-        boolean finBool = true;
-        for(boolean b : list) {
+        boolean testResult = true;
+        for(boolean b : boolList) {
             if (!b) {
-                finBool = false;
+                testResult = false;
                 break;
             }
         }
-        result.recordNewTask(finBool);
+        result.recordNewTask(testResult);
         return result;
     }
 }

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-import java.util.List; //I'm just using the default Java list even though it isn't the best because we don't need to reinvent the wheel for this project.
+import java.util.List;
+import java.util.Random;
 
 public class Station {
     private String name;
@@ -24,19 +25,20 @@ public class Station {
         population = pop;
         busInfo = busInfoIn;
         stationWaiters = new Queue<Job>();
+        this.numWorkers = numWorkers;
 
         lastPickupTime = 0;
     }
 
-    public void getBusArrivals(double currentTime) {
+    public void getBusArrivals(double currentTime, CityInfoHolder[] cityInfo) {
         List<Job> busArrivals = new ArrayList<>();
         double busTime = getLastPickupTime();
 
         while (busTime < currentTime) {
             for (int i = 0; i < busInfo.getVehicleCapacity(); i++) {
-                busArrivals.add(new Job(busTime, getName())); //TODO: Departing station
+                busArrivals.add(new Job(busTime, getName(), pickStation(cityInfo)));
             }
-            busTime += busInfo.getArrivalFrequency(); // Move update after adding jobs
+            busTime += busInfo.getArrivalFrequency();
         }
 
         for(Job j : busArrivals) {
@@ -44,11 +46,26 @@ public class Station {
         }
     }
 
+    private String pickStation(CityInfoHolder[] cityInfo) {
+        int totalWorkers = 0;
+        for(CityInfoHolder c : cityInfo) {
+            totalWorkers += c.getNumWorkers();
+        }
+
+        Random r = new Random();
+        int randInt = r.nextInt(totalWorkers);
+        for(CityInfoHolder c : cityInfo) {
+            randInt -= c.getNumWorkers();
+            if(randInt < 0) { return c.getName(); }
+        }
+        return null;
+    }
+
     public static UnitTestResult UnitTest() {
         UnitTestResult result = new UnitTestResult("Station");
 
         Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5, 50));
-        station1.getBusArrivals(10);
+        station1.getBusArrivals(10, new CityInfoHolder[] {new CityInfoHolder("frederick", 1000)});
         result.recordNewTask(station1.stationWaiters.length == 20);
 
         return result;

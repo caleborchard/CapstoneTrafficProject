@@ -15,7 +15,7 @@ public class Queue<T> {
     public boolean isQueueEmpty() { return (length == 0); }
 
     public Queue() {
-        length = 0; head = null; current = null;
+        length = 0;
     }
 
     public void enqueue(T value) {

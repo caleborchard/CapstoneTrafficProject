@@ -11,6 +11,8 @@ public class UnitTestResult {
         testsrun = 0;
         testsfinished = 0;
         this.errors = new ArrayList<>();
+
+        System.out.println("Starting " + className + " unit test");
     }
 
     public UnitTestResult(String className, int testsRun, int testsFinished) {
@@ -18,6 +20,8 @@ public class UnitTestResult {
         this.testsrun = testsRun;
         this.testsfinished = testsFinished;
         this.errors = new ArrayList<>();
+
+        System.out.println("Starting " + className + " unit test");
     }
 
     public int getTestsRun() { return testsrun; }
