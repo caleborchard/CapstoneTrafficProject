@@ -9,7 +9,8 @@ public class Job {
     public String getOnboardingStation() { return onboardingStation; }
     public String getDestStation() { return destStation; }
 
-    public Job(double currentTime, String onboardingStation, String destStation) { timeOfCreation = currentTime; this.onboardingStation = onboardingStation;}
+    public Job(double currentTime, String onboardingStation, String destStation)
+    { timeOfCreation = currentTime; this.onboardingStation = onboardingStation; this.destStation = destStation; }
 
     public void complete(double currentTime) { serviceEndTime = currentTime; }
 }

@@ -49,14 +49,18 @@ public class Station {
     private String pickStation(CityInfoHolder[] cityInfo) {
         int totalWorkers = 0;
         for(CityInfoHolder c : cityInfo) {
-            totalWorkers += c.getNumWorkers();
+            if(!c.getName().equals(getName())) totalWorkers += c.getNumWorkers();
         }
+
+        if (totalWorkers == 0) return null;
 
         Random r = new Random();
         int randInt = r.nextInt(totalWorkers);
         for(CityInfoHolder c : cityInfo) {
-            randInt -= c.getNumWorkers();
-            if(randInt < 0) { return c.getName(); }
+            if(!c.getName().equals(getName())) {
+                randInt -= c.getNumWorkers();
+                if(randInt < 0) return c.getName();
+            }
         }
         return null;
     }

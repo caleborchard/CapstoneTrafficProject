@@ -35,7 +35,6 @@ public class BatchServerQueue {
             deq = currentStation.stationWaiters.dequeue();
         }
 
-        //TODO: Fix departure code.
         List<Job> passengerList = new ArrayList<>();
         for(int i = 0; i < currentPassengers.length; i++) {
             passengerList.add(currentPassengers.dequeue());
@@ -43,7 +42,7 @@ public class BatchServerQueue {
         for(Job j : passengerList) {
             if(currentStation.getName().equals(j.getDestStation())) {
                 j.complete(currentTime);
-                System.out.println("!!!"+j+"!!!");
+                //System.out.println("Completed:" + j.getOnboardingStation() + " to " + j.getDestStation() + " in " + (j.getServiceEndTime()-j.getTimeOfCreation()) + " minutes.");
             } else { currentPassengers.enqueue(j); }
         }
         System.out.println("Stopping at " + currentStation.getName() + ". Number of passengers: " + passengerCount() + ", CurrentTime=" + currentTime);
