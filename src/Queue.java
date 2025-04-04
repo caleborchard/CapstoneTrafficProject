@@ -9,7 +9,7 @@ public class Queue<T> {
     }
 
     protected int length;
-    protected QueueRecord head, current;
+    protected QueueRecord current;
 
     public int getLength() { return length; }
     public boolean isQueueEmpty() { return (length == 0); }
@@ -19,21 +19,25 @@ public class Queue<T> {
     }
 
     public void enqueue(T value) {
-        QueueRecord newrecord = new QueueRecord(value);
+        QueueRecord newRecord = new QueueRecord(value);
 
-        if(head == null) { head = newrecord; }
-        else { current.nextrecord = newrecord; }
-        current = newrecord;
+        if(current == null) { current = newRecord; }
+        else {
+            QueueRecord lastValid = current;
+            while(lastValid.nextrecord != null) {
+                lastValid = lastValid.nextrecord;
+            }
+            lastValid.nextrecord = newRecord;
+        }
         length++;
     }
 
     public T dequeue() {
-        QueueRecord returnrecord = head;
-        if(head == null) { return null; }
-        else if(current == head) { head = null; current = null; }
-        else { head = head.nextrecord; }
+        QueueRecord returnR = current;
+        if(current == null) return null;
+        else { current = current.nextrecord; }
         length--;
-        return returnrecord.value;
+        return returnR.value;
     }
 
     public static UnitTestResult UnitTest() {
