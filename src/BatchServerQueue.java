@@ -60,7 +60,7 @@ public class BatchServerQueue {
 
         BatchServerQueue train1 = new BatchServerQueue(new VehicleInfo(500, 30, 250), globalStationQueue);
 
-        for(int i = 0; i < 49; i++) {
+        for(int i = 0; i < 20; i++) {
             currentTime += train1.stopAtStation(currentTime);
         }
         return result;

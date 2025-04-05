@@ -1,0 +1,9 @@
+stationName,originDistance,population,numWorkers,busCapacity,busFrequency,busSpeed
+frederick,0,85793,24459,30,15,50
+urbana,13.7,11985,3490,30,15,50
+germantown,30.2,91749,26112,30,15,50
+gaithersburg,37.6,69472,74274,30,15,50
+rockville,45.0,67297,81479,30,15,50
+silverspring,62.1,81410,57555,30,15,50
+collegepark,68.9,34187,70144,30,15,50
+dc,76.5,670050,557753,30,15,50
