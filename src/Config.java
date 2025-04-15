@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Config {
-    private class StationConfig {
+    protected static class StationConfig {
         private String stationName;
         private double originDistance;
         private int population;
@@ -33,6 +33,10 @@ public class Config {
         public int getBusCapacity() { return busCapacity; }
         public int getBusFrequency() { return busFrequency; }
         public int getBusSpeed() { return busSpeed; }
+    }
+
+    public List<StationConfig> getStationConfigs(String stationConfigFile) {
+        return loadStationConfigs(stationConfigFile);
     }
 
     private List<StationConfig> loadStationConfigs(String stationConfigFile) {
