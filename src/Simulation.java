@@ -17,6 +17,5 @@ public class Simulation {
     public void run(int stops) {
     }
 
-    //CSV Format: stationName,originDistance,population,numWorkers,busCapacity,busFrequency,busSpeed.
     //TODO: Test code, add unit tests, finish rest of class :)
 }

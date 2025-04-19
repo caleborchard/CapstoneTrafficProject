@@ -11,17 +11,17 @@ public class Config {
         private int population;
         private int numWorkers;
         private int busCapacity;
-        private int busFrequency;
+        private int numBusses;
         private int busSpeed;
 
         public StationConfig(String stationName, double originDistance, int population, int numWorkers,
-                             int busCapacity, int busFrequency, int busSpeed) {
+                             int busCapacity, int numBusses, int busSpeed) {
             this.stationName = stationName;
             this.originDistance = originDistance;
             this.population = population;
             this.numWorkers = numWorkers;
             this.busCapacity = busCapacity;
-            this.busFrequency = busFrequency;
+            this.numBusses = numBusses;
             this.busSpeed = busSpeed;
         }
 
@@ -31,7 +31,7 @@ public class Config {
         public int getPopulation() { return population; }
         public int getNumWorkers() { return numWorkers; }
         public int getBusCapacity() { return busCapacity; }
-        public int getBusFrequency() { return busFrequency; }
+        public int getNumBusses() { return numBusses; }
         public int getBusSpeed() { return busSpeed; }
     }
 
@@ -39,6 +39,7 @@ public class Config {
         return loadStationConfigs(stationConfigFile);
     }
 
+    //CSV Format: stationName,originDistance,population,numWorkers,busCapacity,numBusses,busSpeed.
     private List<StationConfig> loadStationConfigs(String stationConfigFile) {
         List<StationConfig> stationConfigs = new ArrayList<>();
         try {
@@ -54,10 +55,10 @@ public class Config {
                 int population = Integer.parseInt(configData[2]);
                 int numWorkers = Integer.parseInt(configData[3]);
                 int busCapacity = Integer.parseInt(configData[4]);
-                int busFrequency = Integer.parseInt(configData[5]);
+                int numBusses = Integer.parseInt(configData[5]);
                 int busSpeed = Integer.parseInt(configData[6]);
 
-                stationConfigs.add(new StationConfig(stationName, originDistance, population, numWorkers, busCapacity, busFrequency, busSpeed));
+                stationConfigs.add(new StationConfig(stationName, originDistance, population, numWorkers, busCapacity, numBusses, busSpeed));
             }
             configReader.close();;
         } catch (FileNotFoundException e) {

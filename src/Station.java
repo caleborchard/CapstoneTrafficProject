@@ -10,6 +10,10 @@ public class Station {
     private VehicleInfo busInfo;
     public Queue<Job> stationWaiters;
 
+    private final double lambda;
+    private Queue<Job> busStopWaiters = new Queue<>();
+    private ExponentialDistribution arrivalDistribution;
+
     public String getName() { return name; }
     public int getPopulation() { return population; }
     public int getNumWorkers() { return numWorkers; }
@@ -28,21 +32,40 @@ public class Station {
         this.numWorkers = numWorkers;
 
         lastPickupTime = 0;
+        lambda = population * (0.1); //Or, double lambda = jobsPerHour / 60.0; Decide with team.
+        //TODO: Decide lambda calculation with team
+        arrivalDistribution = new ExponentialDistribution(lambda);
+    }
+
+    public void generateBusStopWaiters(double startTime, double endTime, CityInfoHolder[] cityInfo) {
+        double currentTime = startTime;
+
+        while (currentTime < endTime) {
+            double nextArrival = arrivalDistribution.sample();
+            currentTime += nextArrival;
+            if (currentTime >= endTime) break;
+
+            Job job = new Job(currentTime, getName(), pickStation(cityInfo));
+            busStopWaiters.enqueue(job);
+        }
     }
 
     public void getBusArrivals(double currentTime, CityInfoHolder[] cityInfo) {
-        List<Job> busArrivals = new ArrayList<>();
+        generateBusStopWaiters(getLastPickupTime(), currentTime, cityInfo);
         double busTime = getLastPickupTime();
 
         while (busTime < currentTime) {
-            for (int i = 0; i < busInfo.getVehicleCapacity(); i++) {
-                busArrivals.add(new Job(busTime, getName(), pickStation(cityInfo)));
+            int capacity = busInfo.getVehicleCapacity();
+            int count = 0;
+
+            while (!busStopWaiters.isQueueEmpty() && count < capacity) {
+                Job job = busStopWaiters.current.value;
+                if (job.getTimeOfCreation() <= busTime) {
+                    stationWaiters.enqueue(busStopWaiters.dequeue());
+                    count++;
+                } else { break; }
             }
             busTime += busInfo.getArrivalFrequency();
-        }
-
-        for(Job j : busArrivals) {
-            stationWaiters.enqueue(j);
         }
     }
 
@@ -70,7 +93,7 @@ public class Station {
 
         Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5, 50));
         station1.getBusArrivals(10, new CityInfoHolder[] {new CityInfoHolder("frederick", 1000)});
-        result.recordNewTask(station1.stationWaiters.length == 20);
+        //TODO: Make unit tests for Station class.
 
         return result;
     }
