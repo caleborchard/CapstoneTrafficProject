@@ -55,7 +55,7 @@ public class BatchServerQueue {
         double currentTime = 0.0;
         LoopingQueue<Station> globalStationQueue = new LoopingQueue<>();
         for(int i = 1; i <= 10; i++) {
-            globalStationQueue.enqueue(new Station("stationNum" + i, i * 50, 1, 1, new VehicleInfo(30, 15, 50)));
+            globalStationQueue.enqueue(new Station("stationNum" + i, i * 50, 500, 500, new VehicleInfo(30, 15, 50)));
         }
 
         BatchServerQueue train1 = new BatchServerQueue(new VehicleInfo(500, 30, 250), globalStationQueue);

@@ -1,4 +1,4 @@
-stationName,originDistance,population,numWorkers,busCapacity,busFrequency,busSpeed
+stationName,originDistance,population,numWorkers,busCapacity,numBusses,busSpeed
 frederick,0,85793,24459,30,15,50
 urbana,13.7,11985,3490,30,15,50
 germantown,30.2,91749,26112,30,15,50
