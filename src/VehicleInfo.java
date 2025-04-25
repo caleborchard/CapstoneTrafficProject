@@ -9,8 +9,10 @@ public class VehicleInfo {
     public int getVehicleSpeed() { return vehicleSpeed; }
     public int getNumVehicles() { return numVehicles; }
     public double getTravelTime(double distMin, double distMax) {
-        //TODO: Find a way to calculate travel time of busses, probably with distributed variance.
-        return 5;
+        //min 5, max 18 for Frederick as an example.
+        Random r = new Random();
+        double dist = r.nextDouble(distMax-distMin) + distMin;
+        return (dist/getVehicleSpeed())*60;
     }
 
     public VehicleInfo(int capacity, int count, int speed) {

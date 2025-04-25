@@ -65,7 +65,7 @@ public class Station {
                     count++;
                 } else { break; }
             }
-            busTime += busInfo.getTravelTime(50, 250);
+            busTime += busInfo.getTravelTime(5, 18);
         }
     }
 
