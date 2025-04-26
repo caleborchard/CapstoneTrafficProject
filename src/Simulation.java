@@ -15,6 +15,7 @@ public class Simulation {
     int numTrains = 1; //Not currently used
 
     public Simulation(String stationConfigFile) {
+        globalStationQueue = new LoopingQueue<Station>();
         currentTime = 0.0;
         Config config = new Config();
         List<Config.StationConfig> stationConfigs = config.getStationConfigs(stationConfigFile);

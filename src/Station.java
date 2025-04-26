@@ -32,8 +32,8 @@ public class Station {
         this.numWorkers = numWorkers;
 
         lastPickupTime = 0;
-        lambda = population * (0.1); //Or, double lambda = jobsPerHour / 60.0; Decide with team.
-        //TODO: Decide lambda calculation with team
+        lambda = getPopulation()/((double)11985);
+        //TODO: This is a temporary solution to get lambda value, decide with team best approach to this.
         arrivalDistribution = new ExponentialDistribution(lambda);
     }
 
@@ -41,12 +41,13 @@ public class Station {
         double currentTime = startTime;
 
         while (currentTime < endTime) {
-            double nextArrival = arrivalDistribution.sample();
-            currentTime += nextArrival;
-            if (currentTime >= endTime) break;
-
             Job job = new Job(currentTime, getName(), pickStation(cityInfo));
             busStopWaiters.enqueue(job);
+
+            double nextArrival = arrivalDistribution.sample();
+            currentTime += nextArrival;
+            //System.out.println(nextArrival);
+            if (currentTime >= endTime) break;
         }
     }
 

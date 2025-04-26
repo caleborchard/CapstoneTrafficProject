@@ -59,8 +59,10 @@ public class Config {
                 int busSpeed = Integer.parseInt(configData[6]);
 
                 stationConfigs.add(new StationConfig(stationName, originDistance, population, numWorkers, busCapacity, numBusses, busSpeed));
+                //System.out.println("New Station Read: " + stationName + ", Population: " + population + ", numWorkers: " + numWorkers);
             }
-            configReader.close();;
+            configReader.close();
+            System.out.println(stationConfigs.size());
         } catch (FileNotFoundException e) {
             System.out.println("Invalid file path");
         }
