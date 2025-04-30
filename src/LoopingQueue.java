@@ -17,6 +17,19 @@ public class LoopingQueue<T> extends Queue<T> {
     private final List<CityInfoHolder> stationInfo = new ArrayList<>();
     public CityInfoHolder[] getStationNames() { return stationInfo.toArray(new CityInfoHolder[0]); }
 
+    public LoopingQueue<T> cloneQueue() {
+        LoopingQueue<T> cloned = new LoopingQueue<>();
+        DoublyQueueRecord start = current;
+
+        while(start.prevrecord != null) { start = start.prevrecord; } //Traverse to leftmost item in list
+        while(start != null) {
+            cloned.enqueue(start.value);
+            start = start.nextrecord;
+        }
+        System.out.println("Cloned length: " + cloned.getLength());
+        return cloned;
+    }
+
     public void enqueue(T value) {
         DoublyQueueRecord newRecord = new DoublyQueueRecord(value);
         if(newRecord.value instanceof Station s) { stationInfo.add(new CityInfoHolder(s.getName(), s.getNumWorkers())); }
@@ -70,6 +83,26 @@ public class LoopingQueue<T> extends Queue<T> {
             }
         }
         result.recordNewTask(testResult);
+
+        boolList.clear();
+        LoopingQueue<Job> lq2 = lq1.cloneQueue();
+        for(int i = 0; i < 5; i++) {
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("frederick"));
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("westminster"));
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("dc"));
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("frostburg"));
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("dc"));
+            boolList.add(lq2.dequeue().getOnboardingStation().equals("westminster"));
+        }
+        testResult = true;
+        for(boolean b : boolList) {
+            if (!b) {
+                testResult = false;
+                break;
+            }
+        }
+        result.recordNewTask(testResult);
+
         return result;
     }
 }

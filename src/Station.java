@@ -32,22 +32,21 @@ public class Station {
         this.numWorkers = numWorkers;
 
         lastPickupTime = 0;
-        lambda = getPopulation()/((double)11985);
-        //TODO: This is a temporary solution to get lambda value, decide with team best approach to this.
+        lambda = getPopulation()/((double)11985); //TODO: Retrieve median population instead of hardcoded value, maybe add multiplier
         arrivalDistribution = new ExponentialDistribution(lambda);
     }
 
     public void generateBusStopWaiters(double startTime, double endTime, CityInfoHolder[] cityInfo) {
-        double currentTime = startTime;
+        double localCurrentTime = startTime;
 
-        while (currentTime < endTime) {
-            Job job = new Job(currentTime, getName(), pickStation(cityInfo));
+        while (localCurrentTime < endTime) {
+            Job job = new Job(localCurrentTime, getName(), pickStation(cityInfo));
             busStopWaiters.enqueue(job);
 
             double nextArrival = arrivalDistribution.sample();
-            currentTime += nextArrival;
+            localCurrentTime += nextArrival;
             //System.out.println(nextArrival);
-            if (currentTime >= endTime) break;
+            if (localCurrentTime >= endTime) break;
         }
     }
 

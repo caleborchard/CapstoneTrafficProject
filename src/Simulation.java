@@ -10,11 +10,11 @@ public class Simulation {
     VehicleInfo trainInfo = new VehicleInfo(
             500,
             Integer.MAX_VALUE, //Does not do anything for trains
-            250
+            250 //Kmh
     );
     int numTrains = 1; //Not currently used
 
-    public Simulation(String stationConfigFile) {
+    public Simulation(String stationConfigFile, SimulationConfig simConfig) {
         globalStationQueue = new LoopingQueue<Station>();
         currentTime = 0.0;
         Config config = new Config();
@@ -26,17 +26,17 @@ public class Simulation {
                     s.getPopulation(),
                     s.getNumWorkers(),
                     new VehicleInfo(
-                            s.getBusCapacity(),
-                            s.getNumBusses(),
-                            s.getBusSpeed()
+                            simConfig.busCapacity,
+                            simConfig.numBusses,
+                            simConfig.busSpeed
                     )
             ));
         }
     }
 
     public void run(int stops) {
+        BatchServerQueue train = new BatchServerQueue(trainInfo, globalStationQueue.cloneQueue());
         for(int i = 0; i <= stops; i++) {
-            BatchServerQueue train = new BatchServerQueue(trainInfo, globalStationQueue);
             double travelTime = train.stopAtStation(currentTime);
             currentTime += travelTime;
         }

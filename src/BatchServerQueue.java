@@ -9,6 +9,8 @@ public class BatchServerQueue {
     private final VehicleInfo trainInfo;
     private double distanceFromOriginStation = 0;
 
+
+
     public BatchServerQueue(VehicleInfo vehicleInfo, LoopingQueue<Station> stationQueue) {
         this.stationQueue = stationQueue;
         currentPassengers = new Queue<>();
