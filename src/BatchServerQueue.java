@@ -8,8 +8,11 @@ public class BatchServerQueue {
     //private double nextStopTime;
     private final VehicleInfo trainInfo;
     private double distanceFromOriginStation = 0;
+    private double timeOffset = 0.0;
 
-
+    public int passengerCount() { return currentPassengers.getLength(); }
+    public double getTimeOffset() { return timeOffset; }
+    public void setTimeOffset(double offset) { this.timeOffset = offset; }
 
     public BatchServerQueue(VehicleInfo vehicleInfo, LoopingQueue<Station> stationQueue) {
         this.stationQueue = stationQueue;
@@ -18,8 +21,6 @@ public class BatchServerQueue {
         currentStation = null;
         //nextStopTime = Double.MAX_VALUE;
     }
-
-    public int passengerCount() { return currentPassengers.getLength(); }
 
     public double stopAtStation(double currentTime) {
         currentStation = stationQueue.dequeue();
@@ -47,9 +48,10 @@ public class BatchServerQueue {
                 //System.out.println("Completed:" + j.getOnboardingStation() + " to " + j.getDestStation() + " in " + (j.getServiceEndTime()-j.getTimeOfCreation()) + " minutes.");
             } else { currentPassengers.enqueue(j); }
         }
-        System.out.println("Stopping at " + currentStation.getName() + ". Number of passengers: " + passengerCount() + ", CurrentTime=" + currentTime);
         return timeToTravel;
     }
+
+    public String toString() { return "Stopping at " + currentStation.getName() + ". Number of passengers: " + passengerCount(); }
 
     public static UnitTestResult UnitTest() {
         UnitTestResult result = new UnitTestResult("BatchServerQueue");

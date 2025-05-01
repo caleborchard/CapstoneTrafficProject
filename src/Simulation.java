@@ -1,20 +1,13 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Simulation {
     private double currentTime;
     private LoopingQueue<Station> globalStationQueue;
-    VehicleInfo trainInfo = new VehicleInfo(
-            500,
-            Integer.MAX_VALUE, //Does not do anything for trains
-            250 //Kmh
-    );
-    int numTrains = 1; //Not currently used
+    VehicleInfo trainInfo;
+    SimulationConfig simConfig;
 
-    public Simulation(String stationConfigFile, SimulationConfig simConfig) {
+    public Simulation(String stationConfigFile, SimulationConfig simConfigIn) {
+        simConfig = simConfigIn;
         globalStationQueue = new LoopingQueue<Station>();
         currentTime = 0.0;
         Config config = new Config();
@@ -32,13 +25,36 @@ public class Simulation {
                     )
             ));
         }
+        trainInfo = new VehicleInfo(simConfig.trainCapacity, simConfig.numTrains, simConfig.trainSpeed);
     }
 
     public void run(int stops) {
-        BatchServerQueue train = new BatchServerQueue(trainInfo, globalStationQueue.cloneQueue());
-        for(int i = 0; i <= stops; i++) {
-            double travelTime = train.stopAtStation(currentTime);
-            currentTime += travelTime;
+        List<BatchServerQueue> trains = new ArrayList<>();
+        for(int i = 0; i < simConfig.numTrains; i++) {
+            LoopingQueue<Station> newQueue = globalStationQueue.cloneQueue();
+            for(int j = 0; j < i; j++) { newQueue.dequeue(); } //TODO: Find optimal train placement and direction
+
+            trains.add(new BatchServerQueue(trainInfo, newQueue));
+        }
+
+        for (int i = 0; i <= stops; i++) {
+            double maxTravelTime = 0.0;
+            Map<BatchServerQueue, Double> travelTimes = new HashMap<>();
+
+            // First pass: calculate travel times and find max
+            for (BatchServerQueue t : trains) {
+                double travelTime = t.stopAtStation(currentTime + t.getTimeOffset());
+                travelTimes.put(t, travelTime);
+                maxTravelTime = Math.max(travelTime, maxTravelTime);
+            }
+            currentTime += maxTravelTime;
+
+            // Second pass: update offsets
+            for (BatchServerQueue t : trains) {
+                double travelTime = travelTimes.get(t);
+                t.setTimeOffset(t.getTimeOffset() + travelTime - maxTravelTime);
+                System.out.println(t.toString() + ", CurrentTime=" + (currentTime + t.getTimeOffset()));
+            }
         }
     }
 

@@ -26,7 +26,6 @@ public class LoopingQueue<T> extends Queue<T> {
             cloned.enqueue(start.value);
             start = start.nextrecord;
         }
-        System.out.println("Cloned length: " + cloned.getLength());
         return cloned;
     }
 
