@@ -57,6 +57,4 @@ public class Simulation {
             }
         }
     }
-
-    //TODO: Add unit tests
 }
