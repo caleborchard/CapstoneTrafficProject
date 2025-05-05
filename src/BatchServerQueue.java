@@ -9,10 +9,14 @@ public class BatchServerQueue {
     private final VehicleInfo trainInfo;
     private double distanceFromOriginStation = 0;
     private double timeOffset = 0.0;
+    private int completedJobs = 0;
+    private double totalServiceTime = 0.0;
 
     public int passengerCount() { return currentPassengers.getLength(); }
     public double getTimeOffset() { return timeOffset; }
     public void setTimeOffset(double offset) { this.timeOffset = offset; }
+    public int getCompletedJobs() { return completedJobs; }
+    public double getTotalServiceTime() { return totalServiceTime; }
 
     public BatchServerQueue(VehicleInfo vehicleInfo, LoopingQueue<Station> stationQueue) {
         this.stationQueue = stationQueue;
@@ -45,6 +49,8 @@ public class BatchServerQueue {
         for(Job j : passengerList) {
             if(currentStation.getName().equals(j.getDestStation())) {
                 j.complete(currentTime);
+                completedJobs++;
+                totalServiceTime += (j.getServiceEndTime() - j.getTimeOfCreation());
                 //System.out.println("Completed:" + j.getOnboardingStation() + " to " + j.getDestStation() + " in " + (j.getServiceEndTime()-j.getTimeOfCreation()) + " minutes.");
             } else { currentPassengers.enqueue(j); }
         }
