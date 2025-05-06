@@ -28,7 +28,7 @@ public class Simulation {
         trainInfo = new VehicleInfo(simConfig.trainCapacity, simConfig.numTrains, simConfig.trainSpeed);
     }
 
-    public void run(int stops) {
+    public OutputDataConfig run(int stops) {
         List<BatchServerQueue> trains = new ArrayList<>();
         for(int i = 0; i < simConfig.numTrains; i++) {
             LoopingQueue<Station> newQueue = globalStationQueue.cloneQueue();
@@ -53,8 +53,22 @@ public class Simulation {
             for (BatchServerQueue t : trains) {
                 double travelTime = travelTimes.get(t);
                 t.setTimeOffset(t.getTimeOffset() + travelTime - maxTravelTime);
-                System.out.println(t.toString() + ", CurrentTime=" + (currentTime + t.getTimeOffset()));
+                //System.out.println(t.toString() + ", CurrentTime=" + (currentTime + t.getTimeOffset()));
             }
         }
+
+        // collecting metrics across all trains
+        int totalCompletedJobs = trains.stream().mapToInt(BatchServerQueue::getCompletedJobs).sum();
+        double cumulativeServiceTime = trains.stream().mapToDouble(BatchServerQueue::getTotalServiceTime).sum();
+        double avgServiceTime = totalCompletedJobs > 0 ? cumulativeServiceTime / totalCompletedJobs : 0.0;
+        double longestServiceTime  = trains.stream().mapToDouble(BatchServerQueue::getTotalServiceTime).max().orElse(0.0);
+
+        return new OutputDataConfig(
+                simConfig.numTrains,
+                simConfig.numBusses,
+                avgServiceTime,
+                longestServiceTime,
+                totalCompletedJobs
+        );
     }
 }
