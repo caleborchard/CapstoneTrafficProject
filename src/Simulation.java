@@ -32,8 +32,8 @@ public class Simulation {
         List<BatchServerQueue> trains = new ArrayList<>();
         for(int i = 0; i < simConfig.numTrains; i++) {
             LoopingQueue<Station> newQueue = globalStationQueue.cloneQueue();
-            for(int j = 0; j < i; j++) { newQueue.dequeue(); } //TODO: Find optimal train placement and direction
-
+            int stationsPerTrain = globalStationQueue.length / simConfig.numTrains;
+            for(int j = 0; j < i * stationsPerTrain; j++) { newQueue.dequeue(); }
             trains.add(new BatchServerQueue(trainInfo, newQueue));
         }
         for (int i = 0; i <= stops; i++) {
