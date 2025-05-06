@@ -71,6 +71,4 @@ public class Simulation {
                 totalCompletedJobs
         );
     }
-
-    //TODO: Add unit tests
 }
