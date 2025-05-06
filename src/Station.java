@@ -55,17 +55,25 @@ public class Station {
         double busTime = getLastPickupTime();
 
         while (busTime < currentTime) {
-            int capacity = busInfo.getVehicleCapacity();
-            int count = 0;
+            int numVehicles = busInfo.getNumVehicles();
+            int capacityPerBus = busInfo.getVehicleCapacity();
 
-            while (!busStopWaiters.isQueueEmpty() && count < capacity) {
-                Job job = busStopWaiters.current.value;
-                if (job.getTimeOfCreation() <= busTime) {
-                    stationWaiters.enqueue(busStopWaiters.dequeue());
-                    count++;
-                } else { break; }
+            for (int i = 0; i < numVehicles; i++) {
+                int count = 0;
+
+                while (!busStopWaiters.isQueueEmpty() && count < capacityPerBus) {
+                    Job job = busStopWaiters.current.value;
+                    if (job.getTimeOfCreation() <= busTime) {
+                        stationWaiters.enqueue(busStopWaiters.dequeue());
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
             }
-            busTime += busInfo.getTravelTime(5, 18);
+
+            double travelTime = busInfo.getTravelTime(5, 18);
+            busTime += travelTime;
         }
     }
 

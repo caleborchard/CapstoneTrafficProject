@@ -15,8 +15,8 @@ public class OutputDataConfig {
     @Override
     public String toString() {
         return String.format(
-                "Trains=%d  Buses=%d  AvgServiceTime=%.2fmin  LongesServiceTime=%.2fmin  CompletedJobs=%d",
-                numTrains, numBuses, avgServiceTime, longestServiceTime, totalCompletedJobs
+                "Trains=%d  Buses=%d  AvgServiceTime=%.2fmin  CompletedJobs=%d  Ratio (Smaller is better)=%.2f",
+                numTrains, numBuses, avgServiceTime, totalCompletedJobs, (avgServiceTime/totalCompletedJobs)*100
         );
     }
 }

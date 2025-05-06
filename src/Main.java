@@ -17,12 +17,17 @@ public class Main {
         if(stationConfigFile.isEmpty()) { stationConfigFile = "C:\\JavaProjects\\CapstoneTrafficProject\\stations.csv"; } //Caleb: So that I don't have to paste it in each time for myself
         // Just a handful of (trains, buses) combos to smoke-test
         int[][] vehicleNumber = {
+                {1, 1},
                 {1, 10},
                 {1, 20},
+                {1, 30},
+                {1, 40},
+                {1, 50},
                 {2, 10},
                 {2, 20},
                 {3, 30},
                 {4, 40},
+                {5, 10},
                 {5, 50}
         };
 
@@ -42,7 +47,8 @@ public class Main {
             );
 
                 Simulation simulation = new Simulation(stationConfigFile, simulationConfig);
-                results.add(simulation.run(30));
+                results.add(simulation.run(50));
+                System.out.println();
         }
 
         System.out.println("\nSimulation results: ");
