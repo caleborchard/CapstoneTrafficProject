@@ -91,9 +91,74 @@ public class Station {
     public static UnitTestResult UnitTest() {
         UnitTestResult result = new UnitTestResult("Station");
 
-        Station station1 = new Station("frederick", 0, 1000, 1000, new VehicleInfo(10, 5, 50));
-        station1.getBusArrivals(10, new CityInfoHolder[] {new CityInfoHolder("frederick", 1000)});
-        //TODO: Make unit tests for Station class.
+        // Test 1: Constructor initializes fields correctly
+        try {
+            Station station = new Station("TestStation", 5.5, 2000, 500, new VehicleInfo(20, 10, 30));
+            assert station.getName().equals("TestStation") : "Name not initialized correctly";
+            assert station.getDistanceFromOriginStation() == 5.5 : "Distance not initialized correctly";
+            assert station.getPopulation() == 2000 : "Population not initialized correctly";
+            assert station.getNumWorkers() == 500 : "NumWorkers not initialized correctly";
+            assert station.getLastPickupTime() == 0 : "LastPickupTime not initialized to 0";
+            result.recordNewTask(true);
+        } catch (AssertionError e) {
+            result.recordNewTask(false);
+        }
+
+        // Test 2: pickStation selects the only other city
+        try {
+            Station station = new Station("A", 0, 100, 50, new VehicleInfo(10, 5, 20));
+            CityInfoHolder[] cities = { new CityInfoHolder("A", 50), new CityInfoHolder("B", 100) };
+            String picked = station.pickStation(cities);
+            assert picked != null && picked.equals("B") : "pickStation did not select the only other city";
+            result.recordNewTask(true);
+        } catch (AssertionError e) {
+            result.recordNewTask(false);
+        }
+
+        // Test 3: getBusArrivals updates lastPickupTime
+        try {
+            Station station = new Station("Test", 0, 1000, 500, new VehicleInfo(10, 5, 50));
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500) };
+            station.getBusArrivals(10.0, cities);
+            assert station.getLastPickupTime() > 0 : "lastPickupTime not updated after getBusArrivals";
+            result.recordNewTask(true);
+        } catch (AssertionError e) {
+            result.recordNewTask(false);
+        }
+
+        // Test 4: generateBusStopWaiters with zero time range creates no jobs
+        try {
+            Station station = new Station("Test", 0, 1000, 500, new VehicleInfo(10, 5, 50));
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500) };
+            station.getBusArrivals(0.0, cities);
+            assert station.stationWaiters.isQueueEmpty() : "stationWaiters should be empty when time range is zero";
+            result.recordNewTask(true);
+        } catch (AssertionError e) {
+            result.recordNewTask(false);
+        }
+
+        // Test 5: Bus capacity limits jobs moved to stationWaiters (example with capacity 2)
+        try {
+            VehicleInfo busInfo = new VehicleInfo(2, 5, 50);
+            Station station = new Station("Test", 0, 100000, 500, busInfo); // High population to generate jobs
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500), new CityInfoHolder("Other", 500) };
+
+            // Assuming generateBusStopWaiters produces jobs; process up to time 10
+            station.getBusArrivals(10.0, cities);
+
+            // Check if the number of jobs in stationWaiters does not exceed possible bus arrivals
+            // This is a heuristic check as exact numbers depend on random distributions
+            int jobCount = 0;
+            while (!station.stationWaiters.isQueueEmpty()) {
+                station.stationWaiters.dequeue();
+                jobCount++;
+            }
+            int maxPossible = (int) (10.0 / busInfo.getTravelTime(5, 18)) * busInfo.getVehicleCapacity();
+            assert jobCount <= maxPossible : "stationWaiters exceeded expected job count based on bus capacity";
+            result.recordNewTask(true);
+        } catch (AssertionError e) {
+            result.recordNewTask(false);
+        }
 
         return result;
     }
