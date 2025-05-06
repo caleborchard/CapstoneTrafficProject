@@ -48,7 +48,7 @@ public class Config {
                 stationConfigs.add(new StationConfig(stationName, originDistance, population, numWorkers));
             }
             configReader.close();
-            System.out.println("Number of stations: " + stationConfigs.size());
+            //System.out.println("Number of stations: " + stationConfigs.size());
         } catch (FileNotFoundException e) {
             System.out.println("Invalid file path");
         }
