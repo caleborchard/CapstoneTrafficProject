@@ -16,6 +16,8 @@ public class LoopingQueue<T> extends Queue<T> {
     private boolean forward = true;
     private final List<CityInfoHolder> stationInfo = new ArrayList<>();
 
+    public boolean getDirection() { return forward; }
+
     public CityInfoHolder[] getStationNames() {
         return stationInfo.toArray(new CityInfoHolder[0]);
     }
@@ -37,7 +39,7 @@ public class LoopingQueue<T> extends Queue<T> {
     public void enqueue(T value) {
         DoublyQueueRecord newRecord = new DoublyQueueRecord(value);
         if (newRecord.value instanceof Station s) {
-            stationInfo.add(new CityInfoHolder(s.getName(), s.getNumWorkers()));
+            stationInfo.add(new CityInfoHolder(s.getName(), s.getNumWorkers(), s.getDistanceFromOriginStation()));
         }
 
         if (current == null) {

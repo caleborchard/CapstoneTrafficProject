@@ -115,7 +115,7 @@ public class Station {
         // Test 2: pickStation selects the only other city
         try {
             Station station = new Station("A", 0, 100, 50, new VehicleInfo(10, 5, 20));
-            CityInfoHolder[] cities = { new CityInfoHolder("A", 50), new CityInfoHolder("B", 100) };
+            CityInfoHolder[] cities = { new CityInfoHolder("A", 50, 0), new CityInfoHolder("B", 100, 0) };
             String picked = station.pickStation(cities);
             assert picked != null && picked.equals("B") : "pickStation did not select the only other city";
             result.recordNewTask(true);
@@ -126,7 +126,7 @@ public class Station {
         // Test 3: getBusArrivals updates lastPickupTime
         try {
             Station station = new Station("Test", 0, 1000, 500, new VehicleInfo(10, 5, 50));
-            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500) };
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500, 0) };
             station.getBusArrivals(10.0, cities);
             assert station.getLastPickupTime() > 0 : "lastPickupTime not updated after getBusArrivals";
             result.recordNewTask(true);
@@ -137,7 +137,7 @@ public class Station {
         // Test 4: generateBusStopWaiters with zero time range creates no jobs
         try {
             Station station = new Station("Test", 0, 1000, 500, new VehicleInfo(10, 5, 50));
-            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500) };
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500, 0) };
             station.getBusArrivals(0.0, cities);
             assert station.stationWaiters.isQueueEmpty() : "stationWaiters should be empty when time range is zero";
             result.recordNewTask(true);
@@ -149,7 +149,7 @@ public class Station {
         try {
             VehicleInfo busInfo = new VehicleInfo(2, 5, 50);
             Station station = new Station("Test", 0, 100000, 500, busInfo); // High population to generate jobs
-            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500), new CityInfoHolder("Other", 500) };
+            CityInfoHolder[] cities = { new CityInfoHolder("Test", 500, 0), new CityInfoHolder("Other", 500, 0) };
 
             // Assuming generateBusStopWaiters produces jobs; process up to time 10
             station.getBusArrivals(10.0, cities);

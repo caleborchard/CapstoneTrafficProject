@@ -28,33 +28,59 @@ public class BatchServerQueue {
         //nextStopTime = Double.MAX_VALUE;
     }
 
+    private double getStationDistance(String stationName) {
+        for(CityInfoHolder c : stationQueue.getStationNames()) {
+            if(c.getName().equals(stationName)) {
+                return c.getDistanceFromOrigin();
+            }
+        }
+        return -1;
+    }
+
     public double stopAtStation(double currentTime) {
         currentStation = stationQueue.dequeue();
 
-        double stationDistanceFromOrigin = currentStation.getDistanceFromOriginStation();
+        double stationDistanceFromOrigin = getCurrentStation().getDistanceFromOriginStation();
         double distanceToTravel = Math.abs(stationDistanceFromOrigin - distanceFromOriginStation);
         double timeToTravel = (distanceToTravel / trainInfo.getVehicleSpeed())*60;
         distanceFromOriginStation = stationDistanceFromOrigin;
 
         currentStation.getBusArrivals(currentTime, stationQueue.getStationNames());
 
-        Job deq = currentStation.stationWaiters.dequeue();
-        while(deq != null && currentPassengers.length < trainInfo.getVehicleCapacity()) {
-            currentPassengers.enqueue(deq);
-            deq = currentStation.stationWaiters.dequeue();
+        int capacityLeft = trainInfo.getVehicleCapacity() - currentPassengers.getLength();
+        Queue<Job> tempWaitingQ = new Queue<>();
+
+        while(capacityLeft > 0 && !getCurrentStation().stationWaiters.isQueueEmpty()) {
+            Job job = getCurrentStation().stationWaiters.dequeue();
+            double destinationDistance = getStationDistance(job.getDestStation());
+            boolean direction = stationQueue.getDirection();
+
+            if((direction && destinationDistance > stationDistanceFromOrigin) || (!direction && destinationDistance < stationDistanceFromOrigin)) {
+                currentPassengers.enqueue(job);
+                capacityLeft--;
+            }
+            else {
+                tempWaitingQ.enqueue(job);
+            }
+        }
+
+        while(!tempWaitingQ.isQueueEmpty()) {
+            getCurrentStation().stationWaiters.enqueue(tempWaitingQ.dequeue());
         }
 
         List<Job> passengerList = new ArrayList<>();
         for(int i = 0; i < currentPassengers.length; i++) {
-            passengerList.add(currentPassengers.dequeue());
-        }
-        for(Job j : passengerList) {
-            if(currentStation.getName().equals(j.getDestStation())) {
+            Job j = currentPassengers.dequeue();
+            if(getCurrentStation().getName().equals(j.getDestStation())) {
                 j.complete(currentTime);
                 completedJobs++;
                 totalServiceTime += (j.getServiceEndTime() - j.getTimeOfCreation());
-                //System.out.println("Completed:" + j.getOnboardingStation() + " to " + j.getDestStation() + " in " + (j.getServiceEndTime()-j.getTimeOfCreation()) + " minutes.");
-            } else { currentPassengers.enqueue(j); }
+            } else {
+                passengerList.add(j);
+            }
+        }
+        for(Job j : passengerList) {
+            currentPassengers.enqueue(j);
         }
         return timeToTravel;
     }
