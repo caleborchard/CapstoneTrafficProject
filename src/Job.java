@@ -9,6 +9,8 @@ public class Job {
     public String getOnboardingStation() { return onboardingStation; }
     public String getDestStation() { return destStation; }
 
+    public String toString() { return "Created: " + getTimeOfCreation() + " at " + getOnboardingStation() + ", going to " + getDestStation(); }
+
     public Job(double currentTime, String onboardingStation, String destStation)
     { timeOfCreation = currentTime; this.onboardingStation = onboardingStation; this.destStation = destStation; }
 

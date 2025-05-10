@@ -37,7 +37,7 @@ public class Simulation {
             trains.add(new BatchServerQueue(trainInfo, newQueue));
         }
         for (int i = 0; i <= stops; i++) {
-            System.out.print("\r" + (((double)i/stops)*100) + "% completed");
+            System.out.print("\r" + i + "/" + stops + " tasks completed. " + System.currentTimeMillis());
             double maxTravelTime = 0.0;
             Map<BatchServerQueue, Double> travelTimes = new HashMap<>();
 
@@ -53,7 +53,6 @@ public class Simulation {
             for (BatchServerQueue t : trains) {
                 double travelTime = travelTimes.get(t);
                 t.setTimeOffset(t.getTimeOffset() + travelTime - maxTravelTime);
-                //System.out.println(t.toString() + ", CurrentTime=" + (currentTime + t.getTimeOffset()));
             }
         }
 
@@ -61,18 +60,7 @@ public class Simulation {
         int totalCompletedJobs = trains.stream().mapToInt(BatchServerQueue::getCompletedJobs).sum();
         double cumulativeServiceTime = trains.stream().mapToDouble(BatchServerQueue::getTotalServiceTime).sum();
         double avgServiceTime = totalCompletedJobs > 0 ? cumulativeServiceTime / totalCompletedJobs : 0.0;
-        //double longestServiceTime = trains.stream().mapToDouble(BatchServerQueue::getTotalServiceTime).max().orElse(0.0);
         double longestServiceTime = 0;
-        /*
-        int totalCompletedJobs = 0;
-        double cumulativeServiceTime = 0;
-        double longestServiceTime = 0;
-        for(BatchServerQueue train: trains) {
-            totalCompletedJobs += train.getCompletedJobs();
-            cumulativeServiceTime += train.getTotalServiceTime();
-        }
-        double avgServiceTime = cumulativeServiceTime / totalCompletedJobs;
-         */
 
         return new OutputDataConfig(
                 simConfig.numTrains,

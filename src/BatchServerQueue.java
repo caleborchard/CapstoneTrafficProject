@@ -45,8 +45,6 @@ public class BatchServerQueue {
         double timeToTravel = (distanceToTravel / trainInfo.getVehicleSpeed())*60;
         distanceFromOriginStation = stationDistanceFromOrigin;
 
-        currentStation.getBusArrivals(currentTime, stationQueue.getStationNames());
-
         int capacityLeft = trainInfo.getVehicleCapacity() - currentPassengers.getLength();
         Queue<Job> tempWaitingQ = new Queue<>();
 
@@ -82,6 +80,8 @@ public class BatchServerQueue {
         for(Job j : passengerList) {
             currentPassengers.enqueue(j);
         }
+
+        currentStation.getBusArrivals(currentTime, stationQueue.getStationNames());
         return timeToTravel;
     }
 

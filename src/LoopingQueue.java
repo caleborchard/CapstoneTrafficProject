@@ -18,8 +18,13 @@ public class LoopingQueue<T> extends Queue<T> {
 
     public boolean getDirection() { return forward; }
 
+    private CityInfoHolder[] stationNames;
+
     public CityInfoHolder[] getStationNames() {
-        return stationInfo.toArray(new CityInfoHolder[0]);
+        if(stationNames == null) {
+            stationNames = stationInfo.toArray(new CityInfoHolder[0]);
+        }
+        return stationNames;
     }
 
     public LoopingQueue<T> cloneQueue() {

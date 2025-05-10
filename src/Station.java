@@ -13,6 +13,7 @@ public class Station {
     private final double lambda;
     private Queue<Job> busStopWaiters = new Queue<>();
     private ExponentialDistribution arrivalDistribution;
+    private Random r;
 
     public String getName() { return name; }
     public int getPopulation() { return population; }
@@ -24,6 +25,7 @@ public class Station {
     public double getLastPickupTime() { return lastPickupTime; }
 
     public Station(String stationName, double originDistance, int pop, int numWorkers, VehicleInfo busInfoIn) {
+        r = new Random();
         name = stationName;
         distanceFromOriginStation = originDistance;
         population = pop;
@@ -45,7 +47,6 @@ public class Station {
 
             double nextArrival = arrivalDistribution.sample();
             localCurrentTime += nextArrival;
-            //System.out.println(nextArrival);
             if (localCurrentTime >= endTime) break;
         }
     }
@@ -72,9 +73,10 @@ public class Station {
                 }
             }
 
-            double travelTime = busInfo.getTravelTime(5, 18);
+            double travelTime = busInfo.getTravelTime(5, 6);
             busTime += travelTime;
         }
+        lastPickupTime = currentTime; //This line of code fixed an issue I dealt with 5 hours because I am dumb -C
     }
 
     private String pickStation(CityInfoHolder[] cityInfo) {
@@ -85,7 +87,6 @@ public class Station {
 
         if (totalWorkers == 0) return null;
 
-        Random r = new Random();
         int randInt = r.nextInt(totalWorkers);
         for(CityInfoHolder c : cityInfo) {
             if(!c.getName().equals(getName())) {

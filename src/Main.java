@@ -15,21 +15,18 @@ public class Main {
         Scanner ln = new Scanner(System.in);
         String stationConfigFile = ln.nextLine();
         if(stationConfigFile.isEmpty()) { stationConfigFile = "C:\\JavaProjects\\CapstoneTrafficProject\\stations.csv"; } //Caleb: So that I don't have to paste it in each time for myself
-        // Just a handful of (trains, buses) combos to smoke-test
-        int[][] vehicleNumber = {
-                {1, 1},
-                {1, 10},
-                {1, 20},
-                {1, 30},
-                {1, 40},
-                {1, 50},
-                {2, 10},
-                {2, 20},
-                {3, 30},
-                {4, 40},
-                {5, 10},
-                {5, 50}
-        };
+
+        int numTrainsRange = 16;
+        int numBussesRange = 50;
+        int[][] vehicleNumber = new int[numTrainsRange * numBussesRange][2];
+        int index = 0;
+        for(int train = 1; train <= numTrainsRange; train++) {
+            for(int bus = 1; bus <= numBussesRange; bus++) {
+                vehicleNumber[index][0] = train;
+                vehicleNumber[index][1] = bus;
+                index++;
+            }
+        }
 
         List<OutputDataConfig> results = new ArrayList<>();
 
@@ -47,7 +44,7 @@ public class Main {
             );
 
                 Simulation simulation = new Simulation(stationConfigFile, simulationConfig);
-                results.add(simulation.run(50));
+                results.add(simulation.run(100));
                 System.out.println();
         }
 
